@@ -1,0 +1,25 @@
+---
+// src/components/FetchDonger.astro
+import { useState, useEffect } from "react";
+
+const { id } = Astro.props;
+const [donger, setDonger] = useState(null);
+
+useEffect(() => {
+  const fetchDonger = async () => {
+    try {
+      const response = await fetch(`/api/donger/${id}`);
+      const data = await response.json();
+      setDonger(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  fetchDonger();
+}, [id]);
+
+if (!donger) return <div>Loading...</div>;
+
+return <div>{donger.flavor}</div>;
+---
