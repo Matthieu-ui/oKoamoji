@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.8.2",
+    "@astrojs/db": "^0.12.0",
     "@astrojs/rss": "^4.0.7",
     "@resvg/resvg-js": "^2.6.0",
     "@supabase/supabase-js": "^2.44.4",

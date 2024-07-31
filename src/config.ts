@@ -6,11 +6,13 @@ export const SITE: Site = {
   profile: "https://MatthieuFelker.com/",
   desc: "An extensive collection of koamoji, dongers, and emoticons.",
   title: "oKoamoji",
+  flavor: "",
   ogImage: "astropaper-og.jpg",
   lightAndDarkMode: true,
   postPerIndex: 4,
   postPerPage: 3,
-  scheduledPostMargin: 15 * 60 * 1000, // 15 minutes
+  scheduledPostMargin: 15 * 60 * 1000,
+  component: undefined,
 };
 
 export const LOCALE = {
@@ -28,7 +30,7 @@ export const LOGO_IMAGE = {
 export const SOCIALS: SocialObjects = [
   {
     name: "Github",
-    href: "/",
+    href: "https://github.com/Matthieu-ui",
     linkTitle: ` ${SITE.title} on Github`,
     active: true,
   },
@@ -58,7 +60,7 @@ export const SOCIALS: SocialObjects = [
   },
   {
     name: "Twitter",
-    href: "/",
+    href: "https://x.com/oKaomoji_npc",
     linkTitle: `${SITE.title} on Twitter`,
     active: false,
   },

@@ -6,11 +6,13 @@ export type Site = {
   profile: string;
   desc: string;
   title: string;
+  flavor: string;
   ogImage?: string;
   lightAndDarkMode: boolean;
   postPerIndex: number;
   postPerPage: number;
   scheduledPostMargin: number;
+  component: any;
 };
 
 export type SocialObjects = {

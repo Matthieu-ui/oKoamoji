@@ -8,15 +8,17 @@ import type { CollectionEntry } from "astro:content";
 import { slugifyStr } from "@utils/slugify";
 import ShareLinks from "@components/ShareLinks.astro";
 import { SITE } from "@config";
+import FetchDonger from "@components/FetchDonger.astro";
 
 export interface Props {
   post: CollectionEntry<"blog">;
 }
 
 const { post } = Astro.props;
+console.log(post.data);
 
 const {
-  title,
+  flavor, // Assuming flavor is available in post.data
   author,
   description,
   ogImage,
@@ -30,12 +32,12 @@ const { Content } = await post.render();
 
 const ogImageUrl = typeof ogImage === "string" ? ogImage : ogImage?.src;
 const ogUrl = new URL(
-  ogImageUrl ?? `/posts/${slugifyStr(title)}.png`,
+  ogImageUrl ?? `/posts/${slugifyStr(flavor)}.png`,
   Astro.url.origin
 ).href;
 
 const layoutProps = {
-  title: `${title} | ${SITE.title}`,
+  title: `${flavor} | ${SITE.title}`,
   author,
   description,
   pubDatetime,
@@ -48,10 +50,6 @@ const layoutProps = {
 
 <Layout {...layoutProps}>
   <Header />
-
-  <!-- <div class="progress-container fixed top-0 z-10 h-1 w-full bg-skin-fill">
-    <div class="progress-bar h-1 w-0 bg-skin-accent" id="myBar"></div>
-  </div> -->
 
   <div class="mx-auto flex w-full max-w-3xl justify-start px-2">
     <button
@@ -66,7 +64,7 @@ const layoutProps = {
     </button>
   </div>
   <main id="main-content">
-    <h1 transition:name={slugifyStr(title)} class="post-title">{title}</h1>
+    <h1 transition:name={slugifyStr(flavor)} class="post-title">{flavor}</h1>
     <Datetime
       pubDatetime={pubDatetime}
       modDatetime={modDatetime}
@@ -74,6 +72,7 @@ const layoutProps = {
       className="my-2"
     />
     <article id="article" class="prose mx-auto mt-8 max-w-3xl">
+      <FetchDonger flavor={flavor} />
       <Content />
     </article>
 

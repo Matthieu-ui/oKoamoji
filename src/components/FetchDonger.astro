@@ -1,25 +1,72 @@
 ---
-// src/components/FetchDonger.astro
-import { useState, useEffect } from "react";
+import { db, Dongers } from "astro:db";
 
-const { id } = Astro.props;
-const [donger, setDonger] = useState(null);
+export interface FetchDongerProps {
+  flavor: string; // Define the flavor prop type
+}
 
-useEffect(() => {
-  const fetchDonger = async () => {
-    try {
-      const response = await fetch(`/api/donger/${id}`);
-      const data = await response.json();
-      setDonger(data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
+const { flavor } = Astro.props as FetchDongerProps;
+
+// Fetch all dongers from the database
+const dongers = await db.select().from(Dongers).execute();
+
+// Define type for Donger
+type Donger = {
+  id: number;
+  flavor: string;
+  donger: string;
+};
+
+// Filter dongers by the flavor
+const filteredDongers = dongers.filter(
+  (donger: Donger) => donger.flavor === flavor
+);
+
+// Group filtered dongers by flavor
+const groupedDongers = filteredDongers.reduce(
+  (acc: Record<string, string[]>, { flavor, donger }: Donger) => {
+    if (!acc[flavor]) {
+      acc[flavor] = [];
     }
-  };
+    acc[flavor].push(donger);
+    return acc;
+  },
+  {}
+);
 
-  fetchDonger();
-}, [id]);
-
-if (!donger) return <div>Loading...</div>;
-
-return <div>{donger.flavor}</div>;
+// Convert groupedDongers object to an array of { flavor, dongers }
+const groupedDongersArray = Object.keys(groupedDongers).map(flavor => ({
+  flavor,
+  dongers: groupedDongers[flavor],
+}));
 ---
+
+<div class="fetch-donger">
+  <h2>Dongers for Flavor: {flavor}</h2>
+  {
+    groupedDongersArray.length > 0 ? (
+      <table>
+        <thead>
+          <tr>
+            <th>Flavor</th>
+            <th>Donger</th>
+          </tr>
+        </thead>
+        <tbody>
+          {groupedDongersArray.map(({ flavor, dongers }) => (
+            <>
+              {dongers.map((donger, index) => (
+                <tr key={`${flavor}-${index}`}>
+                  {index === 0 && <td rowSpan={dongers.length}>{flavor}</td>}
+                  <td>{donger}</td>
+                </tr>
+              ))}
+            </>
+          ))}
+        </tbody>
+      </table>
+    ) : (
+      <p>No dongers available for this flavor.</p>
+    )
+  }
+</div>
