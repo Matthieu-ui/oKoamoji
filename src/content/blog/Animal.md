@@ -1,18 +1,49 @@
 ---
 author: Sat Naing
-pubDatetime: 2022-09-23T15:22:00Z
+pubDatetime: 2024-07-23T31:22:00Z
 modDatetime: 2023-12-21T09:12:47.400Z
-title: Animal
+title: Animal ( ͡°ᴥ ͡° ʋ) ➣ View ALL
 flavor: animal
 slug: adding-new-posts-in-astropaper-theme
 featured: true
 draft: false
 tags:
-  - docs
-description: "ʕ◉ᴥ◉ʔ
-٩ʕ◕౪◕ʔو
-⊂(ο･㉨･ο)⊃
-( ◔ ౪◔)
+-  Cat
+-  Dog
+-  Cute
+-  Furry
+-  Puppy
+-  Kitten
+-  Adorable
+-  Pet
+-  Playful
+-  Fluffy
+-  Paws
+-  Meow
+-  Woof
+-  Snuggly
+-  Cuddly
+-  Charming
+-  Companion
+-  Animal
+-  Loveable
+-  Sweet
+description: "ʕ◉ᴥ◉ʔ |
+٩ʕ◕౪◕ʔو |
+⊂(ο･㉨･ο)⊃ | 
+( ◔ ౪◔) |
+ ʕง•ᴥ•ʔง |
+    ʕ⊙ᴥ⊙ʔ |
+    (^ ◕ᴥ◕ ^) |
+    ༼( ͡⊙  ਊ  ͡⊙)༽ |
+    ᕦ( ヘ (oo) ヘ )ᕤ |
+    (∩◕(oo)◕∩ ) |
+    ʕ◉ᴥ◉ʔ |
+    (◕ᴥ◕) 
+
+
+
+ 
 "
 
 components:
