@@ -2,7 +2,7 @@
 author: Sat Naing
 pubDatetime: 2024-07-23T31:22:00Z
 modDatetime: 2023-12-21T09:12:47.400Z
-title: Animal ( ͡°ᴥ ͡° ʋ) ➣ View ALL
+title: Animals ( ͡°ᴥ ͡° ʋ) ➣ View ALL
 flavor: animal
 slug: adding-new-posts-in-astropaper-theme
 featured: true

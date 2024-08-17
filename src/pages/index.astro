@@ -9,6 +9,7 @@ import Card from "@components/Card";
 import Socials from "@components/Socials.astro";
 import getSortedPosts from "@utils/getSortedPosts";
 import { SITE, SOCIALS } from "@config";
+import SearchBar from "@components/Search";
 
 const posts = await getCollection("blog");
 
@@ -16,7 +17,27 @@ const sortedPosts = getSortedPosts(posts);
 const featuredPosts = sortedPosts.filter(({ data }) => data.featured);
 const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
 
+// Shuffle function
+const shuffleArray = array => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+};
+
+// Shuffle and slice to only show 3 featured posts
+const shuffledFeaturedPosts = shuffleArray(featuredPosts).slice(0, 3);
+
 const socialCount = SOCIALS.filter(social => social.active).length;
+
+// List of items to search in
+const searchList = sortedPosts.map(({ data, slug }) => ({
+  title: data.title,
+  description: data.description,
+  data,
+  slug,
+}));
 ---
 
 <Layout>
@@ -60,6 +81,7 @@ const socialCount = SOCIALS.filter(social => social.active).length;
           Let's go!
         </LinkButton>
       </p>
+
       {
         // only display if at least one social link is enabled
         socialCount > 0 && (
@@ -71,15 +93,19 @@ const socialCount = SOCIALS.filter(social => social.active).length;
       }
     </section>
 
+    <section id="featured">
+      <SearchBar client:load searchList={searchList} />
+    </section>
+
     <Hr />
 
     {
-      featuredPosts.length > 0 && (
+      shuffledFeaturedPosts.length > 0 && (
         <>
           <section id="featured">
             <h2>Featured</h2>
             <ul>
-              {featuredPosts.map(({ data, slug }) => (
+              {shuffledFeaturedPosts.map(({ data, slug }) => (
                 <Card
                   href={`/posts/${slug}/`}
                   frontmatter={data}
