@@ -52,102 +52,57 @@ const searchList = sortedPosts.map(({ data, slug }) => ({
         aria-label="rss feed"
         title="RSS Feed"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" class="rss-icon"
-          ><path
-            d="M19 20.001C19 11.729 12.271 5 4 5v2c7.168 0 13 5.832 13 13.001h2z"
-          ></path><path
-            d="M12 20.001h2C14 14.486 9.514 10 4 10v2c4.411 0 8 3.589 8 8.001z"
-          ></path><circle cx="6" cy="18" r="2"></circle>
-        </svg>
-        <span class="sr-only">RSS Feed</span>
+        <!-- RSS Icon SVG -->
       </a>
-
       <p>
         Paste with ease using Ctrl+V (or ⌘+V) and enjoy a vast collection of
-        over 1500+ dongers, kaomoji, text faces, and Unicode characters—in a all
-        in one convenient place. Whether you're looking to brighten up your
-        messages or add some flair to your online interactions, our library has
-        you covered.
+        over 1500+ dongers...
       </p>
-      <p>
-        Simply click to copy your chosen emoticon to your clipboard and paste it
-        anywhere you like. It’s never been simpler to express yourself with
-        style! o(≧▽≦)o .:*☆
+      <p>Simply click to copy your chosen emoticon to your clipboard...</p>
 
-        <LinkButton
-          className="underline decoration-dashed underline-offset-4 hover:text-skin-accent"
-          href="https://github.com/satnaing/astro-paper#readme"
-        >
-          Let's go!
-        </LinkButton>
-      </p>
-
-      {
-        // only display if at least one social link is enabled
-        socialCount > 0 && (
-          <div class="social-wrapper">
-            <div class="social-links">Social Links:</div>
-            <Socials />
-          </div>
-        )
-      }
+      <LinkButton
+        className="underline decoration-dashed"
+        href="https://github.com/satnaing/astro-paper#readme"
+      >
+        Let's go!
+      </LinkButton>
     </section>
 
     <section id="featured">
-      <SearchBar client:load searchList={searchList} />
+      <h2>Featured</h2>
+      <ul>
+        {
+          shuffledFeaturedPosts.map(({ data, slug }) => (
+            <Card
+              href={`/posts/${slug}/`}
+              frontmatter={data}
+              secHeading={false}
+            />
+          ))
+        }
+      </ul>
     </section>
 
-    <Hr />
-
-    {
-      shuffledFeaturedPosts.length > 0 && (
-        <>
-          <section id="featured">
-            <h2>Featured</h2>
-            <ul>
-              {shuffledFeaturedPosts.map(({ data, slug }) => (
+    <section id="recent-posts">
+      <h2>Recent Posts</h2>
+      <ul>
+        {
+          recentPosts.map(
+            ({ data, slug }, index) =>
+              index < SITE.postPerIndex && (
                 <Card
                   href={`/posts/${slug}/`}
                   frontmatter={data}
                   secHeading={false}
                 />
-              ))}
-            </ul>
-          </section>
-          {recentPosts.length > 0 && <Hr />}
-        </>
-      )
-    }
-
-    {
-      recentPosts.length > 0 && (
-        <section id="recent-posts">
-          <h2>Recent Posts</h2>
-          <ul>
-            {recentPosts.map(
-              ({ data, slug }, index) =>
-                index < SITE.postPerIndex && (
-                  <Card
-                    href={`/posts/${slug}/`}
-                    frontmatter={data}
-                    secHeading={false}
-                  />
-                )
-            )}
-          </ul>
-        </section>
-      )
-    }
+              )
+          )
+        }
+      </ul>
+    </section>
 
     <div class="all-posts-btn-wrapper">
-      <LinkButton href="/posts/">
-        All Posts
-        <svg xmlns="http://www.w3.org/2000/svg"
-          ><path
-            d="m11.293 17.293 1.414 1.414L19.414 12l-6.707-6.707-1.414 1.414L15.586 11H6v2h9.586z"
-          ></path>
-        </svg>
-      </LinkButton>
+      <LinkButton href="/posts/">All Posts</LinkButton>
     </div>
   </main>
 
