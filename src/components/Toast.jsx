@@ -17,8 +17,8 @@ const Toast = ({ message }) => {
     <div
       style={{ fontFamily: "monospace" }}
       className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50
-        border border-skin-accent bg-skin-fill text-skin-accent
-        px-4 py-2 text-sm tracking-wide shadow-none"
+        neu-card text-skin-accent
+        px-5 py-2.5 text-sm tracking-wide"
     >
       {message}
     </div>

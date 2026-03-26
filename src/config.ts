@@ -4,10 +4,10 @@ export const SITE: Site = {
   website: "https://oKaomoji.com/", // replace this with your deployed domain
   author: "Matthieu Felker",
   profile: "https://MatthieuFelker.com/",
-  desc: "An extensive collection of kaomoji, dongers, and emoticons.",
+  desc: "Browse thousands of kaomoji, Japanese emoticons, dongers, and text faces. Search 70+ categories and copy any to your clipboard with one click.",
   title: "oKaomoji",
   flavor: "",
-  ogImage: "astropaper-og.jpg",
+  ogImage: "og.png",
   lightAndDarkMode: true,
   postPerIndex: 4,
   postPerPage: 3,

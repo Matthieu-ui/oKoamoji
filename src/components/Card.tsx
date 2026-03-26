@@ -57,10 +57,8 @@ const Card = ({ href, frontmatter, secHeading = true }: Props) => {
           <button
             key={index}
             title="Click to copy"
-            className="border border-skin-line px-2 py-1 text-sm font-mono
-              hover:border-skin-accent hover:text-skin-accent hover:bg-skin-card
-              active:opacity-60 cursor-pointer transition-colors duration-75
-              bg-transparent text-skin-base"
+            className="neu-btn px-3 py-1.5 text-sm font-mono
+              cursor-pointer text-skin-base hover:text-skin-accent"
             onClick={e => {
               e.preventDefault();
               copyToClipboard(phrase, setMessage);
