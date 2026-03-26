@@ -1,11 +1,11 @@
 import type { Site, SocialObjects } from "./types";
 
 export const SITE: Site = {
-  website: "https://oKoamoji.com/", // replace this with your deployed domain
+  website: "https://oKaomoji.com/", // replace this with your deployed domain
   author: "Matthieu Felker",
   profile: "https://MatthieuFelker.com/",
-  desc: "An extensive collection of koamoji, dongers, and emoticons.",
-  title: "oKoamoji",
+  desc: "An extensive collection of kaomoji, dongers, and emoticons.",
+  title: "oKaomoji",
   flavor: "",
   ogImage: "astropaper-og.jpg",
   lightAndDarkMode: true,

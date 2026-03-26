@@ -3,30 +3,21 @@ import Layout from "@layouts/Layout.astro";
 import Header from "@components/Header.astro";
 import Footer from "@components/Footer.astro";
 import Tag from "@components/Tag.astro";
-import Datetime from "@components/Datetime";
 import type { CollectionEntry } from "astro:content";
 import { slugifyStr } from "@utils/slugify";
 import ShareLinks from "@components/ShareLinks.astro";
 import { SITE } from "@config";
 import FetchDonger from "@components/FetchDonger.astro";
+import dongerData from "../../db/dongers.json";
 
 export interface Props {
   post: CollectionEntry<"blog">;
 }
 
 const { post } = Astro.props;
-console.log(post.data);
 
-const {
-  flavor, // Assuming flavor is available in post.data
-  author,
-  description,
-  ogImage,
-  canonicalURL,
-  pubDatetime,
-  modDatetime,
-  tags,
-} = post.data;
+const { flavor, author, description, ogImage, canonicalURL, pubDatetime, modDatetime, tags } =
+  post.data;
 
 const { Content } = await post.render();
 
@@ -36,8 +27,11 @@ const ogUrl = new URL(
   Astro.url.origin
 ).href;
 
+type DongerMap = Record<string, string[]>;
+const count = ((dongerData as DongerMap)[flavor] ?? []).length;
+
 const layoutProps = {
-  title: `${flavor} | ${SITE.title}`,
+  title: `${flavor} kaomoji | ${SITE.title}`,
   author,
   description,
   pubDatetime,
@@ -53,30 +47,28 @@ const layoutProps = {
 
   <div class="mx-auto flex w-full max-w-3xl justify-start px-2">
     <button
-      class="focus-outline mb-2 mt-8 flex hover:opacity-75"
+      class="focus-outline mb-2 mt-8 flex items-center gap-1 hover:opacity-75"
       onclick="(() => (history.length === 1) ? window.location = '/' : history.back())()"
     >
       <svg xmlns="http://www.w3.org/2000/svg"
         ><path
           d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z"
         ></path>
-      </svg><span>Go back</span>
+      </svg><span>Back</span>
     </button>
   </div>
+
   <main id="main-content">
-    <h1 transition:name={slugifyStr(flavor)} class="post-title">{flavor}</h1>
-    <Datetime
-      pubDatetime={pubDatetime}
-      modDatetime={modDatetime}
-      size="lg"
-      className="my-2"
-    />
-    <article id="article" class="prose mx-auto mt-8 max-w-3xl">
+    <h1 transition:name={slugifyStr(flavor)} class="post-title">
+      {flavor}
+      {count > 0 && <span class="count">({count})</span>}
+    </h1>
+
+    <article id="article" class="mx-auto mt-4 max-w-3xl">
       <FetchDonger flavor={flavor} />
-      <Content />
     </article>
 
-    <ul class="my-8">
+    <ul class="my-6">
       {tags.map(tag => <Tag tag={slugifyStr(tag)} />)}
     </ul>
 
@@ -98,6 +90,7 @@ const layoutProps = {
       <ShareLinks />
     </div>
   </main>
+
   <Footer />
 </Layout>
 
@@ -106,75 +99,14 @@ const layoutProps = {
     @apply mx-auto w-full max-w-3xl px-4 pb-12;
   }
   .post-title {
-    @apply text-2xl font-semibold text-skin-accent;
+    @apply text-2xl font-bold text-skin-accent;
+  }
+  .count {
+    @apply text-lg font-normal opacity-60 ml-1;
   }
 </style>
 
 <script is:inline>
-  /** Attaches copy buttons to code blocks in the document,
-   * allowing users to copy code easily. */
-  function attachCopyButtons() {
-    let copyButtonLabel = "Copy";
-    let codeBlocks = Array.from(document.querySelectorAll("pre"));
-
-    for (let codeBlock of codeBlocks) {
-      let wrapper = document.createElement("div");
-      wrapper.style.position = "relative";
-
-      let copyButton = document.createElement("button");
-      copyButton.className =
-        "copy-code absolute right-3 -top-3 rounded bg-skin-card px-2 py-1 text-xs leading-4 text-skin-base font-medium";
-      copyButton.innerHTML = copyButtonLabel;
-      codeBlock.setAttribute("tabindex", "0");
-      codeBlock.appendChild(copyButton);
-
-      // Wrap the code block with a relative parent element
-      codeBlock?.parentNode?.insertBefore(wrapper, codeBlock);
-      wrapper.appendChild(codeBlock);
-
-      copyButton.addEventListener("click", async () => {
-        await copyCode(codeBlock, copyButton);
-      });
-    }
-
-    async function copyCode(block, button) {
-      let code = block.querySelector("code");
-      let text = code?.innerText;
-
-      if (!text) {
-        console.error("No code text found in block.");
-        alert("No code to copy.");
-        return;
-      }
-
-      try {
-        // Check if the Clipboard API is available
-        if (navigator.clipboard) {
-          await navigator.clipboard.writeText(text);
-          button.innerText = "Copied";
-        } else {
-          // Fallback if Clipboard API is not available
-          console.warn(
-            "Clipboard API not available. Falling back to document.execCommand."
-          );
-          let textarea = document.createElement("textarea");
-          textarea.value = text;
-          document.body.appendChild(textarea);
-          textarea.select();
-          document.execCommand("copy");
-          document.body.removeChild(textarea);
-          button.innerText = "Copied";
-        }
-
-        // Reset the button label after a delay
-        setTimeout(() => {
-          button.innerText = copyButtonLabel;
-        }, 700);
-      } catch (err) {
-        console.error("Failed to copy text: ", err);
-        alert("Failed to copy text. Please try again.");
-      }
-    }
-  }
-  attachCopyButtons();
+  const btn = document.querySelector("#back-to-top");
+  btn?.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
 </script>

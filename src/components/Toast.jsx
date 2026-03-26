@@ -6,16 +6,22 @@ const Toast = ({ message }) => {
   useEffect(() => {
     if (message) {
       setVisible(true);
-      setTimeout(() => setVisible(false), 2000); // Hide after 2 seconds
+      const t = setTimeout(() => setVisible(false), 1600);
+      return () => clearTimeout(t);
     }
   }, [message]);
 
+  if (!visible) return null;
+
   return (
-    visible && (
-      <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg">
-        {message}
-      </div>
-    )
+    <div
+      style={{ fontFamily: "monospace" }}
+      className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50
+        border border-skin-accent bg-skin-fill text-skin-accent
+        px-4 py-2 text-sm tracking-wide shadow-none"
+    >
+      {message}
+    </div>
   );
 };
 

@@ -6,32 +6,33 @@ import Footer from "@components/Footer.astro";
 import LinkButton from "@components/LinkButton.astro";
 import Hr from "@components/Hr.astro";
 import Card from "@components/Card";
-import Socials from "@components/Socials.astro";
 import getSortedPosts from "@utils/getSortedPosts";
-import { SITE, SOCIALS } from "@config";
+import { SITE } from "@config";
 import SearchBar from "@components/Search";
+import dongerData from "../../db/dongers.json";
 
 const posts = await getCollection("blog");
-
 const sortedPosts = getSortedPosts(posts);
 const featuredPosts = sortedPosts.filter(({ data }) => data.featured);
 const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
 
-// Shuffle function
-const shuffleArray = array => {
-  for (let i = array.length - 1; i > 0; i--) {
+const shuffleArray = <T,>(array: T[]): T[] => {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
+    [arr[i], arr[j]] = [arr[j], arr[i]];
   }
-  return array;
+  return arr;
 };
 
-// Shuffle and slice to only show 3 featured posts
-const shuffledFeaturedPosts = shuffleArray(featuredPosts).slice(0, 3);
+const shuffledFeatured = shuffleArray(featuredPosts).slice(0, 6);
 
-const socialCount = SOCIALS.filter(social => social.active).length;
+type DongerMap = Record<string, string[]>;
+const dongers = dongerData as DongerMap;
 
-// List of items to search in
+const totalDongers = Object.values(dongers).reduce((sum, arr) => sum + arr.length, 0);
+const totalCategories = Object.keys(dongers).length;
+
 const searchList = sortedPosts.map(({ data, slug }) => ({
   title: data.title,
   description: data.description,
@@ -44,36 +45,25 @@ const searchList = sortedPosts.map(({ data, slug }) => ({
   <Header />
   <main id="main-content">
     <section id="hero">
-      <h1>ඞkoamoji</h1>
-      <a
-        target="_blank"
-        href="/rss.xml"
-        class="rss-link"
-        aria-label="rss feed"
-        title="RSS Feed"
-      >
-        <!-- RSS Icon SVG -->
-      </a>
-      <p>
-        Paste with ease using Ctrl+V (or ⌘+V) and enjoy a vast collection of
-        over 1500+ dongers...
+      <h1>oKaomoji</h1>
+      <p class="tagline">
+        {totalDongers.toLocaleString()}+ emoticons across {totalCategories} categories.
+        Click any to copy instantly.
       </p>
-      <p>Simply click to copy your chosen emoticon to your clipboard...</p>
-
-      <LinkButton
-        className="underline decoration-dashed"
-        href="https://github.com/satnaing/astro-paper#readme"
-      >
-        Let's go!
-      </LinkButton>
+      <div class="search-wrap">
+        <SearchBar searchList={searchList} client:load />
+      </div>
     </section>
 
+    <Hr />
+
     <section id="featured">
-      <h2>Featured</h2>
+      <h2>Browse Categories</h2>
       <ul>
         {
-          shuffledFeaturedPosts.map(({ data, slug }) => (
+          shuffledFeatured.map(({ data, slug }) => (
             <Card
+              client:load
               href={`/posts/${slug}/`}
               frontmatter={data}
               secHeading={false}
@@ -83,26 +73,8 @@ const searchList = sortedPosts.map(({ data, slug }) => ({
       </ul>
     </section>
 
-    <section id="recent-posts">
-      <h2>Recent Posts</h2>
-      <ul>
-        {
-          recentPosts.map(
-            ({ data, slug }, index) =>
-              index < SITE.postPerIndex && (
-                <Card
-                  href={`/posts/${slug}/`}
-                  frontmatter={data}
-                  secHeading={false}
-                />
-              )
-          )
-        }
-      </ul>
-    </section>
-
     <div class="all-posts-btn-wrapper">
-      <LinkButton href="/posts/">All Posts</LinkButton>
+      <LinkButton href="/posts/">All {sortedPosts.length} Categories →</LinkButton>
     </div>
   </main>
 
@@ -110,39 +82,26 @@ const searchList = sortedPosts.map(({ data, slug }) => ({
 </Layout>
 
 <style>
-  /* ===== Hero Section ===== */
   #hero {
-    @apply pb-6 pt-8;
+    @apply pb-6 pt-10;
   }
   #hero h1 {
-    @apply my-4 inline-block text-3xl font-bold sm:my-8 sm:text-5xl;
+    @apply my-2 inline-block text-4xl font-bold tracking-tight sm:text-6xl;
+    letter-spacing: -0.02em;
   }
-  #hero .rss-link {
-    @apply mb-6;
+  .tagline {
+    @apply mt-1 mb-0 text-sm opacity-50 tracking-wide;
   }
-  #hero .rss-icon {
-    @apply mb-2 h-6 w-6 scale-110 fill-skin-accent sm:mb-3 sm:scale-125;
+  .search-wrap {
+    @apply mt-8;
   }
-  #hero p {
-    @apply my-2;
-  }
-  .social-wrapper {
-    @apply mt-4 flex flex-col sm:flex-row sm:items-center;
-  }
-  .social-links {
-    @apply mb-1 mr-2 whitespace-nowrap sm:mb-0;
-  }
-
-  /* ===== Featured & Recent Posts Sections ===== */
-  #featured,
-  #recent-posts {
+  #featured {
     @apply pb-6 pt-12;
   }
-  #featured h2,
-  #recent-posts h2 {
-    @apply text-2xl font-semibold tracking-wide;
+  #featured h2 {
+    @apply text-xs font-normal tracking-widest uppercase opacity-40 mb-4;
   }
   .all-posts-btn-wrapper {
-    @apply my-8 text-center;
+    @apply my-10 text-center;
   }
 </style>

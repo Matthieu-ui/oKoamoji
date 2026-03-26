@@ -1,0 +1,85 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Header from "@components/Header.astro";
+import Footer from "@components/Footer.astro";
+import Hr from "@components/Hr.astro";
+import dongerData from "../../db/dongers.json";
+
+type DongerMap = Record<string, string[]>;
+const dongers = dongerData as DongerMap;
+
+const total = Object.values(dongers).reduce((sum, arr) => sum + arr.length, 0);
+const categories = Object.keys(dongers).length;
+---
+
+<Layout title="About | oKaomoji">
+  <Header activeNav="about" />
+  <main id="main-content">
+    <section id="about">
+      <h1>About oKaomoji</h1>
+      <Hr />
+
+      <p>
+        oKaomoji is a fast, minimal emoticon browser with <strong>{total.toLocaleString()}+</strong>
+        kaomoji, dongers, and text emoticons organized across <strong>{categories}</strong> categories.
+      </p>
+
+      <h2>How to use</h2>
+      <p>
+        Browse by category or use the search bar on the homepage. Click any emoticon to
+        copy it to your clipboard instantly — then paste it anywhere.
+      </p>
+
+      <h2>What's a kaomoji?</h2>
+      <p>
+        Kaomoji (顔文字) are Japanese emoticons made from Unicode characters.
+        Unlike Western emoticons that are read sideways <code>:-)</code>, kaomoji
+        are designed to be read straight on:
+        <code>(◕‿◕✿)</code> <code>ʕ•ᴥ•ʔ</code> <code>( ͡° ͜ʖ ͡°)</code>
+      </p>
+
+      <h2>Categories</h2>
+      <ul class="cat-grid">
+        {
+          Object.entries(dongers)
+            .sort(([a], [b]) => a.localeCompare(b))
+            .map(([cat, items]) => (
+              <li>
+                <a href={`/posts/${cat}/`}>
+                  {cat} <span class="count">({items.length})</span>
+                </a>
+              </li>
+            ))
+        }
+      </ul>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  #about {
+    @apply mx-auto max-w-3xl px-4 pb-12 pt-8;
+  }
+  h1 {
+    @apply text-3xl font-bold mb-4;
+  }
+  h2 {
+    @apply text-xl font-semibold mt-8 mb-2;
+  }
+  p {
+    @apply my-3 leading-relaxed;
+  }
+  code {
+    @apply rounded bg-skin-card px-1 py-0.5 text-sm;
+  }
+  .cat-grid {
+    @apply grid grid-cols-2 sm:grid-cols-3 gap-1 mt-4;
+  }
+  .cat-grid li a {
+    @apply text-skin-accent hover:underline decoration-dashed underline-offset-4;
+  }
+  .count {
+    @apply opacity-50 text-skin-base text-sm;
+  }
+</style>

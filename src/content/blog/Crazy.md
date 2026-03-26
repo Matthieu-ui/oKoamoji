@@ -4,7 +4,7 @@ pubDatetime: 2024-07-23T31:22:00Z
 modDatetime: 2023-12-21T09:12:47.400Z
 title: Crazy ┌(▀Ĺ̯▀)┐ ➣ View ALL
 flavor: crazy
-slug: Crazy
+slug: crazy
 featured: true
 draft: false
 tags:

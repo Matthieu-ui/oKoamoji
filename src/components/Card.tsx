@@ -1,54 +1,73 @@
 import { useState } from "react";
 import Toast from "./Toast";
 
-const copyToClipboard = (text, setMessage) => {
+const copyToClipboard = (text: string, setMessage: (msg: string) => void) => {
   if (navigator.clipboard) {
     navigator.clipboard
       .writeText(text)
-      .then(() => {
-        console.log(`Copied: "${text}"`); // Debugging message
-        setMessage(`Copied: "${text}"`);
-      })
-      .catch(err => {
-        console.error("Failed to copy text: ", err); // Error handling
-        setMessage("Failed to copy text");
+      .then(() => setMessage(`Copied: ${text}`))
+      .catch(() => {
+        fallbackCopy(text, setMessage);
       });
   } else {
-    const textarea = document.createElement("textarea");
-    textarea.value = text;
-    document.body.appendChild(textarea);
-    textarea.select();
-    document.execCommand("copy");
-    document.body.removeChild(textarea);
-    console.log(`Copied (fallback): "${text}"`);
-    setMessage(`Copied (fallback): "${text}"`);
+    fallbackCopy(text, setMessage);
   }
 };
 
-const Card = ({ href, frontmatter, secHeading = true }) => {
+const fallbackCopy = (text: string, setMessage: (msg: string) => void) => {
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.style.position = "fixed";
+  textarea.style.opacity = "0";
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand("copy");
+  document.body.removeChild(textarea);
+  setMessage(`Copied: ${text}`);
+};
+
+interface Frontmatter {
+  title: string;
+  description: string;
+}
+
+interface Props {
+  href: string;
+  frontmatter: Frontmatter;
+  secHeading?: boolean;
+}
+
+const Card = ({ href, frontmatter, secHeading = true }: Props) => {
   const { title, description } = frontmatter;
   const [message, setMessage] = useState("");
+  const previews = description.split("|").map(s => s.trim()).filter(Boolean).slice(0, 6);
 
   return (
     <li className="my-6">
       <a
         href={href}
-        className="inline-block text-lg font-medium text-skin-accent decoration-dashed underline-offset-4 focus-visible:no-underline focus-visible:underline-offset-0"
+        className="inline-block text-sm font-mono text-skin-accent tracking-widest uppercase
+          opacity-70 hover:opacity-100 transition-opacity duration-100
+          focus-visible:no-underline"
       >
         {secHeading ? <h2>{title}</h2> : <h3>{title}</h3>}
       </a>
-      <div className="flex flex-wrap gap-2">
-        {description.split("|").map((phrase, index) => (
-          <span
+      <div className="flex flex-wrap gap-2 mt-2">
+        {previews.map((phrase, index) => (
+          <button
             key={index}
-            className="flex-grow border border-gray-300 rounded-md px-2 py-1 text-center transition transform hover:border-gray-600 hover:scale-105 cursor-pointer"
-            onClick={() => {
-              console.log(`Clicked: ${phrase}`); // Debugging
+            title="Click to copy"
+            className="border border-skin-line px-2 py-1 text-sm font-mono
+              hover:border-skin-accent hover:text-skin-accent hover:bg-skin-card
+              active:opacity-60 cursor-pointer transition-colors duration-75
+              bg-transparent text-skin-base"
+            onClick={e => {
+              e.preventDefault();
               copyToClipboard(phrase, setMessage);
             }}
           >
             {phrase}
-          </span>
+          </button>
         ))}
       </div>
       <Toast message={message} />

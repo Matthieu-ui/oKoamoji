@@ -1,72 +1,21 @@
 ---
-import { db, Dongers } from "astro:db";
+import DongerGrid from "./DongerGrid";
+import dongers from "../../db/dongers.json";
 
-export interface FetchDongerProps {
-  flavor: string; // Define the flavor prop type
+export interface Props {
+  flavor: string;
 }
 
-const { flavor } = Astro.props as FetchDongerProps;
+const { flavor } = Astro.props;
 
-// Fetch all dongers from the database
-const dongers = await db.select().from(Dongers).execute();
-
-// Define type for Donger
-type Donger = {
-  id: number;
-  flavor: string;
-  donger: string;
-};
-
-// Filter dongers by the flavor
-const filteredDongers = dongers.filter(
-  (donger: Donger) => donger.flavor === flavor
-);
-
-// Group filtered dongers by flavor
-const groupedDongers = filteredDongers.reduce(
-  (acc: Record<string, string[]>, { flavor, donger }: Donger) => {
-    if (!acc[flavor]) {
-      acc[flavor] = [];
-    }
-    acc[flavor].push(donger);
-    return acc;
-  },
-  {}
-);
-
-// Convert groupedDongers object to an array of { flavor, dongers }
-const groupedDongersArray = Object.keys(groupedDongers).map(flavor => ({
-  flavor,
-  dongers: groupedDongers[flavor],
-}));
+const categoryDongers: string[] =
+  (dongers as Record<string, string[]>)[flavor] ?? [];
 ---
 
-<div class="fetch-donger">
-  <h2>Dongers for Flavor: {flavor}</h2>
-  {
-    groupedDongersArray.length > 0 ? (
-      <table>
-        <thead>
-          <tr>
-            <th>Flavor</th>
-            <th>Donger</th>
-          </tr>
-        </thead>
-        <tbody>
-          {groupedDongersArray.map(({ flavor, dongers }) => (
-            <>
-              {dongers.map((donger, index) => (
-                <tr key={`${flavor}-${index}`}>
-                  {index === 0 && <td rowSpan={dongers.length}>{flavor}</td>}
-                  <td>{donger}</td>
-                </tr>
-              ))}
-            </>
-          ))}
-        </tbody>
-      </table>
-    ) : (
-      <p>No dongers available for this flavor.</p>
-    )
-  }
-</div>
+{
+  categoryDongers.length > 0 ? (
+    <DongerGrid dongers={categoryDongers} client:load />
+  ) : (
+    <p class="text-sm opacity-60">No dongers found for "{flavor}".</p>
+  )
+}

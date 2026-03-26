@@ -4,7 +4,7 @@ pubDatetime: 2024-07-23T31:22:00Z
 modDatetime: 2023-12-21T09:12:47.400Z
 title: Animals ( ͡°ᴥ ͡° ʋ) ➣ View ALL
 flavor: animal
-slug: adding-new-posts-in-astropaper-theme
+slug: animal
 featured: true
 draft: false
 tags:

@@ -3,7 +3,7 @@ author: Sat Naing
 pubDatetime: 2024-01-04T09:30:41.816Z
 title: Angry ლ(ಠ益ಠლ) ➣ View ALL
 flavor: angry
-slug: "astro-paper-v4"
+slug: angry
 featured: true
 ogImage: ../../assets/images/AstroPaper-v4.png
 tags:
